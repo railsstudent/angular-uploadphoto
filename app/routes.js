@@ -32,9 +32,9 @@ module.exports = function(app) {
     // route to handle all angular requests
     app.get('*', function(req, res) {
       // load our public/views/index.html
-      res.sendfile('./public/views/index.html');
+      res.sendfile('./public/index.html');
     });
 
-    
+
 
 };

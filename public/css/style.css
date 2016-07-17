@@ -1,1 +1,5 @@
-body { padding-top:30px; }
+body { padding-top:20px; }
+
+ul {
+  list-style-type: none;
+}

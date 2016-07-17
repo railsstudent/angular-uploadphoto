@@ -10,7 +10,7 @@ module.exports = function(app) {
     // authentication routes
 
     // sample api routes
-    app.get('/api/nerds', function(req, res) {
+    app.get('/photos/list', function(req, res) {
            // use mongoose to get all nerds in the database
            Nerd.find(function(err, nerds) {
 
@@ -25,13 +25,21 @@ module.exports = function(app) {
            });
     });
 
+    app.get('/photos/list/:id/details', function(req, res) {
+      return null;
+    });
+
+    app.post('/photo/upload', function (req, res) {
+
+    });
+
     // routes to handle creating goes here  (app.post)
     // routes to handle get a photo by id
 
     // frontend routes =====================================
     // route to handle all angular requests
     app.get('*', function(req, res) {
-      // load our public/views/index.html
+      // load our public/index.html
       res.sendfile('./public/index.html');
     });
 

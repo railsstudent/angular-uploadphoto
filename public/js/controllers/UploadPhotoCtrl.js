@@ -31,7 +31,7 @@ angular.module('UploadPhotoCtrl', []).controller('PhotoController',
       UploadPhoto.get(id).then (function (response) {
          var result = response.data;
          var matchedPic = _.find($scope.pictureUrlList, function(o) {
-             return o.id === result.id;
+             return o._id === result._id;
          });
          if (matchedPic) {
              matchedPic.dimension = { width: result.width, height: result.height};

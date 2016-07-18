@@ -1,8 +1,25 @@
 <!-- public/views/home.html -->
-
-<div class="jumbotron text-center">
-    <h1>Upload Photo Service</h1>
-</div>
+<!-- add photo upload control -->
+<fieldset>
+  <legend>Upload on form submit</lengend>
+    Photo (Max 10MB):
+      <input type="file" ngf-select ng-model="picFile" name="file"
+             accept="image/*" ngf-max-size="10MB" required
+             ngf-model-invalid="errorFile">
+      <i ng-show="myForm.file.$error.required">*required</i><br>
+      <i ng-show="myForm.file.$error.maxSize">File too large
+          {{errorFile.size / 1000000|number:1}}MB: max 10M</i>
+      <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb">
+      <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+      <br>
+      <button ng-disabled="!myForm.$valid" ng-click="uploadPhoto(picFile)">Submit</button>
+      <span class="progress" ng-show="picFile.progress >= 0">
+        <div style="width:{{picFile.progress}}%"
+            ng-bind="picFile.progress + '%'"></div>
+      </span>
+      <span ng-show="picFile.result">Upload Successful</span>
+      <span class="err" ng-show="uploadErrorMsg">{{uploadErrorMsg}}</span>
+</fieldset>
 <div class="alert alert-success" role="alert" ng-show="successMessage">{{successMessage}}</div>
 <div class="alert alert-danger" role="alert" ng-show="errMessage">{{errMessage}}</div>
 <ul>

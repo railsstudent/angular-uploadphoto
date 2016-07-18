@@ -1,26 +1,23 @@
 angular.module('UploadPhotoService', []).factory('UploadPhoto',
-  ['$http', function ($http) {
+  ['$http', 'Upload', function ($http, Upload) {
 
     return {
          // call to get all nerds
          getAll : function _getAll() {
-          //   return $http.get('/api/photos') ;
+             return $http.get('/photos/list');
          },
 
-
          get : function _get(id) {
-          //  return $http.get('/api/photo/' + id);
+             return $http.get('/photos/list/' + id + '/details/');
          },
 
          // these will work when more API routes are defined on the Node side of things
          // call to POST and create a new nerd
-         create : function _create(nerdData) {
-          //   return $http.post('/api/nerds', nerdData);
+         create : function _create(picFile) {
+             return Upload.upload({
+                  url: '/photo/upload',
+                  data: { file: picFile }
+             });
          }
-
-         // call to DELETE a nerd
-         /*delete : function _delete(id) {
-             return $http.delete('/api/nerds/' + id);
-         }*/
     }
 }]);

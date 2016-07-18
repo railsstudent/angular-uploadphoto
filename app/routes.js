@@ -1,7 +1,7 @@
 // app/routes.js
 
-// grab the nerd model we just created
-var Nerd = require('./models/nerd');
+// grab the photo model we just created
+var Photo = require('./models/photo');
 
 module.exports = function(app) {
 
@@ -12,7 +12,7 @@ module.exports = function(app) {
     // sample api routes
     app.get('/photos/list', function(req, res) {
            // use mongoose to get all nerds in the database
-           Nerd.find(function(err, nerds) {
+           /*Photo.find(function(err, photos) {
 
                // if there is an error retrieving , send the error.
                // nothing after res.send(err) will execute
@@ -20,21 +20,39 @@ module.exports = function(app) {
                     res.send(err);
                }
 
-               // return all nerds in JSON
-               res.json(nerds);
-           });
+               // return all photos in JSON
+               res.json(photos);
+           });*/
+
+           var photos = [
+            {
+               id: 1,
+               path: '/uploads/Selection_097.png'
+            },
+            { id: 2,
+              path: '/uploads/Selection_098.png'
+           }
+         ];
+         res.json(photos);
+//         res.statusCode = 401;
+//         res.send('Custom error message');
     });
 
     app.get('/photos/list/:id/details', function(req, res) {
-      return null;
+
+      var result = {
+        id : 1,
+        width: 1000,
+        height: 255
+      };
+//      res.json(result);
+        res.statusCode = 505;
+        res.send('custom retrieve photo dimension error.');
     });
 
     app.post('/photo/upload', function (req, res) {
 
     });
-
-    // routes to handle creating goes here  (app.post)
-    // routes to handle get a photo by id
 
     // frontend routes =====================================
     // route to handle all angular requests
@@ -42,7 +60,4 @@ module.exports = function(app) {
       // load our public/index.html
       res.sendfile('./public/index.html');
     });
-
-
-
 };

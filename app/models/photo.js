@@ -4,6 +4,6 @@ var mongoose = require('mongoose');
 
 // define our nerd model
 // module.exports allows use to pass this to other files when it is called
-module.exports = mongoose.model('Nerd', {
+module.exports = mongoose.model('Photo', {
   name: { type: String, default: ''}
 });

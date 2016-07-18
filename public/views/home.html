@@ -3,6 +3,8 @@
 <div class="jumbotron text-center">
     <h1>Upload Photo Service</h1>
 </div>
+<div class="alert alert-success" role="alert" ng-show="successMessage">{{successMessage}}</div>
+<div class="alert alert-danger" role="alert" ng-show="errMessage">{{errMessage}}</div>
 <ul>
   <li ng-repeat="pic in pictureUrlList track by $index">
     <div class="row">

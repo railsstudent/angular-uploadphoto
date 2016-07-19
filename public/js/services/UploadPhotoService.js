@@ -16,7 +16,8 @@ angular.module('UploadPhotoService', []).factory('UploadPhoto',
          create : function _create(picFile) {
              return Upload.upload({
                   url: '/photo/upload',
-                  data: { file: picFile }
+                  method: 'POST',
+                  data: { pic: picFile }
              });
          }
     }

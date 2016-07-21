@@ -33,7 +33,7 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'));
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use('/uploads', express.static(__dirname + '/app/uploads'));
 
 // routes
 require('./app/routes')(app); // configure  our routes
@@ -44,6 +44,13 @@ app.listen(port);
 
 // shoutout to the user
 console.log('Magic happens on port ' + port);
+
+// catch all exceptions, and exist gracefully.
+process.on('uncaughtException', function (err) {
+  console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
+  console.error(err.stack)
+  process.exit(1)
+})
 
 // expose app
 exports = module.exports = app;

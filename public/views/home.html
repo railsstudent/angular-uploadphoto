@@ -2,25 +2,26 @@
 <!-- add photo upload control -->
 <form name="myForm" method="post" enctype="multipart/form-data">
   <fieldset>
-    <legend>Upload on form submit</lengend>
-      Photo (Max 1MB):
+    <legend>Upload photo on submit</lengend>
+      Photo (Max 4MB):
         <input type="file" ngf-select ng-model="picFile" name="file"
-               accept="image/*" ngf-max-size="1MB" required
+               accept="image/*" ngf-max-size="4MB" required
                ngf-model-invalid="errorFile">
         <i ng-show="myForm.file.$error.required">*required</i><br>
         <i ng-show="myForm.file.$error.maxSize">File too large
-            {{errorFile.size / 1000000|number:1}}MB: max 1M</i>
+            {{errorFile.size / 1000000|number:1}}MB: max 4M</i>
         <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb">
         <button ng-click="picFile = null" ng-show="picFile">Remove</button>
         <br>
         <button ng-disabled="!myForm.$valid" ng-click="uploadPhoto(picFile)">Submit</button>
         <div class="progress" ng-show="picFile.progress >= 0">
-          <div style="width:{{picFile.progress}}%"
-              ng-bind="picFile.progress + '%'"></div>
+          <div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>
         </div>
-        <div ng-show="picFile.result" class="alert alert-success">Upload Successful</div>
-        <div ng-show="uploadErrorMsg" class="alert alert-danger">
-          {{uploadErrorMsg}}
+        <div ng-show="uploadSuccessMessage" class="alert alert-success">
+            {{uploadSuccessMessage}}
+        </div>
+        <div ng-show="uploadErrorMessage" class="alert alert-danger">
+          {{uploadErrorMessage}}
         </div>
   </fieldset>
 </form>

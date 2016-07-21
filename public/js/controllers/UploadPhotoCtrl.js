@@ -11,15 +11,14 @@ angular.module('UploadPhotoCtrl', []).controller('PhotoController',
     $scope.errMessage = '';
 
     // error message for upload photo
-    
-    $scope.uploadErrorMsg = '';
+    $scope.uploadSuccessMessage = '';
+    $scope.uploadErrorMessage = '';
 
     $scope.getAll = function _getAll() {
 
         /* response data */
         /*
-          [ { _id, path }
-          ]
+          [ { _id, path } ]
         */
         UploadPhoto.getAll().then (function(response) {
           $scope.pictureUrlList = response.data;
@@ -38,6 +37,7 @@ angular.module('UploadPhotoCtrl', []).controller('PhotoController',
       /* returned object */
       /*var result = {
         id : 1,
+        filename: xxx.png,
         width: 1000,
         height: 255
       };*/
@@ -50,7 +50,7 @@ angular.module('UploadPhotoCtrl', []).controller('PhotoController',
          if (matchedPic) {
              matchedPic.dimension = { width: result.width, height: result.height};
              $scope.errMessage = '';
-             $scope.successMessage = 'Dimension of picture (' + id + ') is retrieved successfully.';
+             $scope.successMessage = 'Dimension of picture (' + result.filename + ') is retrieved successfully.';
          } else {
              // show error message
              $scope.successMessage = '';
@@ -66,12 +66,14 @@ angular.module('UploadPhotoCtrl', []).controller('PhotoController',
     $scope.uploadPhoto = function _uploadPhoto(file) {
        var uploadPromise = UploadPhoto.create(file);
        uploadPromise.then(function (response) {
-          file = null;
-          file.result = response.data;
-
+          $scope.picFile = null;
+          $scope.uploadSuccessMessage = response.data.message;
+          $scope.uploadErrorMessage = '';
+          $scope.pictureUrlList.push(response.data.photo);
        }, function (response) {
-           file = null;
-           $scope.uploadErrorMsg = 'Failed to upload photo. Status: ' + response.status
+           $scope.picFile = null;
+           $scope.uploadsuccessMessage = '';
+           $scope.uploadErrorMessage = 'Failed to upload photo. Status: ' + response.status
                 + ', error: ' + response.data;
        }, function(evt) {
            // Math.min is to fix IE which reports 200% sometimes

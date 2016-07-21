@@ -12,6 +12,6 @@ var PhotoSchema = new Schema({
 });
 
 
-// define our nerd model
+// define our photo model
 // module.exports allows use to pass this to other files when it is called
 module.exports = mongoose.model('Photo', PhotoSchema);

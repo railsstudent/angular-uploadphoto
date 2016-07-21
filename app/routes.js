@@ -5,8 +5,8 @@ var Photo = require('./models/photo');
 var util = require('util'),
     multiparty = require('multiparty'),
     uuid = require('node-uuid'),
-    fs = require('fs'),
     sizeOf = require('image-size');
+var imageUtil = require('./imageUtil');
 
 module.exports = function(app) {
 
@@ -44,19 +44,14 @@ module.exports = function(app) {
       });
     });
 
-    var isImage = function _isImage(file) {
-      var contentType = file.headers['content-type'];
-      if (contentType.substring(0, 6) === 'image/') {
-         return true;
-      }
-      return false;
-    }
-
     var saveNewPhoto = function _saveNewPhoto(res, fileObj) {
 
         var file = fileObj.file;
         var upload_file_path = fileObj.upload_file_path;
         var dimensions = fileObj.dimensions;
+
+        console.log('uploaded file path: ' + upload_file_path);
+        console.log('width: ' + dimensions.width + ', height: ' + dimensions.height);
 
         // create a new photo
         var newPhoto = new Photo();
@@ -77,40 +72,12 @@ module.exports = function(app) {
         });
     }
 
-    var copyFile = function _copyFile(res, fileObj, callback) {
-
-      var file = fileObj.file;
-      var destination_path = fileObj.destination_path;
-      var upload_file_path = fileObj.upload_file_path;
-      var dimensions = fileObj.dimensions;
-      if (!file) {
-        return;
-      }
-
-      console.log('In copyFile - file path: ' + file.path + ', destination path: ' + destination_path
-          + ", upload file path: " + upload_file_path);
-      var input_stream = fs.createReadStream(file.path);
-      var output_stream = fs.createWriteStream(destination_path);
-      input_stream.pipe(output_stream);
-
-      input_stream.on('end',function() {
-           fs.unlinkSync(file.path);
-           console.log('Uploaded : ', file.path, file.size / 1024 | 0, 'kb',
-                 file.path, destination_path);
-           if (callback) {
-              callback(res, fileObj);
-           }
-      });
-    }
-
     app.post('/photo/upload', function (req, res) {
 
         console.log('in /photo/upload route');
 
         var form = new multiparty.Form();
         form.parse(req, function(err, fields, files) {
-          console.log('in parse event');
-          console.log(util.inspect({fields: fields, files: files}));
           if (err) {
              res.send(err)
           }
@@ -128,7 +95,7 @@ module.exports = function(app) {
               console.log(file);
 
               // check content type is image
-              if (!isImage(file)) {
+              if (!imageUtil.isImage(file)) {
                   console.log('File is not image.');
                   res.status(400).send('Uploaded file is not an image. Please try again!');
                   return;
@@ -137,9 +104,6 @@ module.exports = function(app) {
               var extension = file.path.substring(file.path.lastIndexOf('.'));
               var upload_file_path = '/uploads/' + uuid.v4() + extension;
               var destination_path = __dirname + upload_file_path;
-              console.log('file name: ' + file.originalFilename + ', temp path: ' + file.path
-                     + ', upload file path: ' + upload_file_path
-                     + ', size: ' + file.size + ', destination_path: ' + destination_path);
 
               // get dimension of the file
              if (file.path) {
@@ -147,16 +111,12 @@ module.exports = function(app) {
                    if (err) {
                        res.send(err);
                    } else {
-                      console.log('width: ' + dimensions.width +
-                          ', height: ' + dimensions.height);
-
-                      var fileObj = {
-                           file: file,
-                           upload_file_path : upload_file_path,
-                           destination_path : destination_path,
-                           dimensions : dimensions
-                      };
-                      copyFile(res, fileObj, saveNewPhoto);
+                      imageUtil.copyFile(res,
+                          { file: file,
+                            upload_file_path : upload_file_path,
+                            destination_path : destination_path,
+                            dimensions : dimensions
+                         }, saveNewPhoto);
                     }
                 });
               }

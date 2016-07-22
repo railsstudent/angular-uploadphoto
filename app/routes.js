@@ -1,12 +1,11 @@
 // app/routes.js
 
 // grab the photo model we just created
-var Photo = require('./models/photo');
-var util = require('util'),
-    multiparty = require('multiparty'),
-    uuid = require('node-uuid'),
-    sizeOf = require('image-size');
-var imageUtil = require('./imageUtil');
+var Promise = require('bluebird');
+var Photo = Promise.promisifyAll(require('./models/photo')),
+    util = require('util'), multiparty = require('multiparty'),
+    uuid = require('node-uuid'),sizeOf = require('image-size'),
+    imageUtil = require('./imageUtil');
 
 module.exports = function(app) {
 
@@ -16,32 +15,34 @@ module.exports = function(app) {
 
     // sample api routes
     app.get('/photos/list', function(req, res) {
-           // use mongoose to get all photos in the database
-           Photo.find({}, 'path _id',function(err, photos) {
-
-               // if there is an error retrieving , send the error.
-               // nothing after res.send(err) will execute
-               if (err) {
-                    res.send(err);
-               }
-
-               // return all photos in JSON
-               res.json(photos);
-           });
+       // use mongoose to get all photos in the database
+       Photo.findAsync({}, 'path _id')
+          .then (function(photos) {
+              console.log('In .then of Photo.findAsync()');
+              console.log(photos);
+              // return all photos in JSON
+              return res.json(photos);
+            })
+            .catch(function (err) {
+              console.log('In .catch of Photo.findAsync()');
+              // if there is an error retrieving , send the error.
+              // nothing after res.send(err) will execute
+              res.send(err);
+            });
     });
 
     app.get('/photos/list/:id/details', function(req, res) {
-
-      Photo.findById(req.params.id, '_id filename width height ', function(err, photo) {
-          console.log( 'Inside Photo.findById');
-          if (err) {
-            res.send(err);
-          }
-
-          console.log(photo);
-          // return a photo in JSON
-          res.json(photo);
-      });
+        Photo.findByIdAsync(req.params.id, '_id filename width height ')
+          .then(function(photo) {
+              console.log( 'Inside .then of findByIdAsync');
+              console.log(photo);
+              // return a photo in JSON
+              res.json(photo);
+          })
+          .catch(function(err) {
+              console.log('In .catch of Photo.findByIdAsync()');
+              res.send(err);
+          });
     });
 
     var saveNewPhoto = function _saveNewPhoto(res, fileObj) {
@@ -108,18 +109,18 @@ module.exports = function(app) {
               // get dimension of the file
              if (file.path) {
                  sizeOf (file.path, function(err, dimensions) {
-                   if (err) {
+                    if (err) {
                        res.send(err);
-                   } else {
-                      imageUtil.copyFile(res,
+                    } else {
+                        imageUtil.copyFile(res,
                           { file: file,
                             upload_file_path : upload_file_path,
                             destination_path : destination_path,
                             dimensions : dimensions
                          }, saveNewPhoto);
-                    }
+                    };
                 });
-              }
+             }
            }
         });
     });

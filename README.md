@@ -1,9 +1,10 @@
 # angular-uploadphoto
 
-...Create a simple MEAN application to upload photo, list all photos and query photo dimensions by id.
+Create a simple MEAN application to upload photo, list all photos and query photo dimensions by id.
 
-...Photo is stored in /uploads directory in the server.
-...Photo attributes are stored in local mongodb, database photodb, collection photos and port 27017.
+
+Photo is stored in /uploads directory in the server.
+Photo attributes are stored in local mongodb, database photodb, collection photos and port 27017.
 
 ##Technology used:
 ###Environment:

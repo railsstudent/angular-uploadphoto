@@ -14,7 +14,7 @@ Photo attributes are stored in local mongodb, database photodb, collection photo
 4. Browser tested: Chrome 51 and FireFox 47.0
 
 5. Framework:
-..* Express 4.5.1
+.* Express 4.5.1
 
 ###Libraries used:
 1. Lodash:  collection utility
@@ -27,7 +27,7 @@ Photo attributes are stored in local mongodb, database photodb, collection photo
 ##Installation:
 1. Create uploads folder under angular-uploadphoto/app
 2. Type npm install on command line to download modules to node_modules directory
-3. Type bower insall on command line to download libraries to public/libs directory
+3. Type bower install on command line to download libraries to public/libs directory
 4. Start local mongodb
 5. Type node server.js to start node server
 6. Type localhost:8080 in browser to navigate to index page
